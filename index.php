@@ -1,6 +1,6 @@
 <?php
 
-else if(is_home())
+if(is_home())
 {
     $GLOBALS['template_part'] = 'start';
     get_header();
