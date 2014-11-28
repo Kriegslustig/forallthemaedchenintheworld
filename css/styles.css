@@ -1,3 +1,12 @@
+/* line 1, ../sass/styles.scss */
+*, *:before, *:after {
+  box-sizing: border-box;
+}
 
+/* line 5, ../sass/styles.scss */
+body {
+  font-family: Helvetica;
+  font-weight: 200;
+}
 
 /*# sourceMappingURL=styles.css.map */
