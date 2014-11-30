@@ -1,12 +1,79 @@
-/* line 1, ../sass/styles.scss */
+/* line 1, ../sass/blocks/_article.sass */
+h1 {
+  color: #59aabe;
+  font-size: 3rem;
+  line-height: 4rem;
+}
+
+/* line 6, ../sass/blocks/_article.sass */
+h2 {
+  color: #59aabe;
+  font-size: 2rem;
+  line-height: 3rem;
+}
+
+/* line 11, ../sass/blocks/_article.sass */
+article strong {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 800;
+}
+
+/* line 16, ../sass/blocks/_article.sass */
+p {
+  font-size: 1rem;
+  line-height: 2rem;
+}
+
+/* line 1, ../sass/blocks/_article-img_size-full.sass */
+.image_wrapper--size--full {
+  position: relative;
+  overflow: hidden;
+  margin: 2rem;
+  width: 110.6%;
+  height: auto;
+  margin-left: -5.3%;
+  box-shadow: inset 0 0 20px black;
+}
+/* line 10, ../sass/blocks/_article-img_size-full.sass */
+.image_wrapper--size--full:before {
+  position: absolute;
+  background-color: #fff4ee;
+  content: "";
+  left: 1rem;
+  top: -2rem;
+  width: 4rem;
+  height: 4rem;
+  transform: rotate(45deg);
+}
+
+/* line 20, ../sass/blocks/_article-img_size-full.sass */
+.size-full {
+  width: 100%;
+  height: 100%;
+}
+
+/* line 7, ../sass/styles.sass */
 *, *:before, *:after {
   box-sizing: border-box;
 }
 
-/* line 5, ../sass/styles.scss */
+/* line 10, ../sass/styles.sass */
+html {
+  font-size: 20px;
+}
+
+/* line 13, ../sass/styles.sass */
 body {
-  font-family: Helvetica;
-  font-weight: 200;
+  font-family: "Avenir Black";
+  font-weight: 400;
+  background-color: #fff4ee;
+  overflow-x: hidden;
+}
+
+/* line 19, ../sass/styles.sass */
+main {
+  padding: 5%;
 }
 
 /*# sourceMappingURL=styles.css.map */
