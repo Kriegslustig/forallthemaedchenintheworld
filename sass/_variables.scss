@@ -1,4 +1,13 @@
 $colors: (
 	'turquoise': #59aabe,
-	'seashellPeach': #fff4ee
+	'seashellPeach': #fff4ee,
+	transparent: transparent,
+	'dark-transparent-black': rgba(0,0,0,.1),
+);
+
+$transparent-gradient: (
+	_c(dark-transparent-black) 0%,
+	_c(transparent) 30%,
+	_c(transparent) 60%,
+	_c(dark-transparent-black) 100%
 )
