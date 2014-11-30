@@ -1,12 +1,11 @@
 <?php
-	global $wp_query;
 	if($wp_query && $wp_query->have_posts()):
 		while($wp_query->have_posts()):
-		the_post();
+			$wp_query->the_post();
 ?>
 			<article>
-				<h2><?= get_the_title() ?></h2>
-				<?= get_the_content(); ?>
+				<h2><?php the_title(); ?></h2>
+				<?php the_content(); ?>
 			</article>
 <?php
 		endwhile;
