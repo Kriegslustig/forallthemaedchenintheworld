@@ -27,3 +27,16 @@ function customize_allemaedchenintheworld ($wp_customize) {
 		'type' => 'textarea'
 	]);
 }
+
+add_filter('get_image_tag', 'add_wrapper_full_size');
+function add_wrapper_full_size ($html) {
+	$size = preg_match_all('/class\=\"[\w\s]*size\-([\w-_]*)/', $html, $matches);
+	$size = $matches[1][0];
+	$wrapper = <<<HTML
+<div class="image_wrapper--size--full">%s</div>
+HTML;
+	if($size === 'full') {
+		return sprintf($wrapper, $html);
+	}
+	return $html;
+}
