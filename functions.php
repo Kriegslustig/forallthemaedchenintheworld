@@ -45,3 +45,5 @@ HTML;
 	}
 	return $html;
 }
+
+add_theme_support('html5', array('gallery'));
