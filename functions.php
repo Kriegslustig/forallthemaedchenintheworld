@@ -8,6 +8,11 @@ function bin_wp_enqueue_styles () {
 	wp_enqueue_style('styles');
 }
 
+add_action('wp_enqueue_scripts', 'bin_wp_enqueue_scripts');
+function bin_wp_enqueue_scripts () {
+	wp_enqueue_script( 'prefixfree', 'js/prefixfree.js', array(), false, true);
+}
+
 // Settings for the customize screen (wp-admin/customize.php)
 add_action('customize_register', 'customize_allemaedchenintheworld');
 function customize_allemaedchenintheworld ($wp_customize) {
