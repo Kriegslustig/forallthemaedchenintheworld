@@ -19,7 +19,7 @@ function bin_wp_enqueue_styles () {
 add_action('wp_enqueue_scripts', 'bin_wp_enqueue_scripts');
 function bin_wp_enqueue_scripts () {
 	wp_enqueue_script( 'prefixfree', get_bloginfo('template_directory').'/js/prefixfree.min.js', array(), false, true);
-	wp_enqueue_script( 'gallery', get_bloginfo('template_directory').'/js/gallery.js', array(), false, true);
+	wp_enqueue_script( 'gallerizer', get_bloginfo('template_directory').'/js/gallerizer.js', array(), false, true);
 }
 
 /*

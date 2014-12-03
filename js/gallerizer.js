@@ -72,17 +72,6 @@ var createAGallerizer = function () {
     callback();
   }
 
-  function goToGalleryAt (elemIndex) {
-    var item = galleryItems[elemIndex],
-      thisURL = item.getElementsByTagName('a')[0].href;
-    if(thisURL !== undefined) {
-      galleryFullImgElem.src = thisURL;
-      setHashQuery(elemIndex);
-    } else {
-      alert(err['noURL']);
-    }
-  }
-
   function setHashQuery (elemIndex) {
     var hash = 'glrzr=' + gallery.id + '--' + elemIndex;
     if(location.href.indexOf('#') <= -1) {
@@ -110,6 +99,25 @@ var createAGallerizer = function () {
       gallery = thisGallery;
       gallerize();
       parseHashQuery();
+    },
+
+    goToGalleryAt: function (elemIndex) {
+      var item = galleryItems[elemIndex],
+        thisURL = item.getElementsByTagName('a')[0].href;
+      if(thisURL !== undefined) {
+        galleryFullImgElem.src = thisURL;
+        setHashQuery(elemIndex);
+      } else {
+        alert(err['noURL']);
+      }
+    }
+
+    goToNext: function () {
+
+    }
+
+    goToPrevious: function () {
+
     }
   }
 }
