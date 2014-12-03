@@ -24,6 +24,12 @@ var createAGallerizer = function () {
     // Error messages schould be stored here
     err,
 
+    // The Image that is currently beeing shown
+    galleryIndex = 0,
+
+    // The number of elements in the gallery
+    galleryLen = 0,
+
     // The gallerizer div, it will contian the imgs
     galleryFullElem = document.createElement('div'),
 
@@ -39,6 +45,7 @@ var createAGallerizer = function () {
 
   function gallerize () {
     galleryItems = gallery.querySelectorAll(galleryItemSelector);
+    galleryLen = galleryItems.length;
     for(var key in galleryItems) {
       if(galleryItems.hasOwnProperty(key)) {
         galleryItems[key].addEventListener('click', function(e) {
@@ -72,12 +79,24 @@ var createAGallerizer = function () {
     callback();
   }
 
+  function goToGalleryAt (elemIndex) {
+    galleryIndex = elemIndex;
+    var item = galleryItems[elemIndex],
+      thisURL = item.getElementsByTagName('a')[0].href;
+    if(thisURL !== undefined) {
+      galleryFullImgElem.src = thisURL;
+      setHashQuery(elemIndex);
+    } else {
+      alert(err['noURL']);
+    }
+  }
+
   function setHashQuery (elemIndex) {
     var hash = 'glrzr=' + gallery.id + '--' + elemIndex;
     if(location.href.indexOf('#') <= -1) {
-      location.href = location.href.split('#')[0] + '#' + hash;
-    } else {
       location.href = location.href + '#' + hash;
+    } else {
+      location.href = location.href.split('#')[0] + '#' + hash;
     }
   }
 
@@ -101,23 +120,26 @@ var createAGallerizer = function () {
       parseHashQuery();
     },
 
-    goToGalleryAt: function (elemIndex) {
-      var item = galleryItems[elemIndex],
-        thisURL = item.getElementsByTagName('a')[0].href;
-      if(thisURL !== undefined) {
-        galleryFullImgElem.src = thisURL;
-        setHashQuery(elemIndex);
-      } else {
-        alert(err['noURL']);
-      }
-    }
+    goToGalleryAt: function (index) {
+      openGalleryWin(function () {
+        goToGalleryAt(index);
+      });
+    },
 
     goToNext: function () {
-
-    }
+      if(galleryIndex < galleryLen) {
+        goToGalleryAt(galleryIndex++);
+      } else {
+        goToGalleryAt(0);
+      }
+    },
 
     goToPrevious: function () {
-
+      if(galleryIndex > 0) {
+        goToGalleryAt(galleryIndex--);
+      } else {
+        goToGalleryAt(galleryLen--);
+      }
     }
   }
 }
