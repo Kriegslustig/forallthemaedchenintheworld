@@ -1,13 +1,17 @@
 var createAGallerizer = function () {
 	var gallery,
 		galleryItemSelector = '.gallery-item',
+		galleryWinOpenClass = ' .gallerizer-viewbox--open',
 		galleryItems,
 		err = {
 			'noURL': 'No attachment link found, please check if you have set the gallery items to link to their media-files',
 		},
-		galleryFullElem = document.createNode('div');
+		galleryFullElem = document.createNode('div'),
+		galleryFullImgElem = document.createNode('img');
 
-		galleryFullElem.className = 'gallerizer-viewbox';
+		galleryFullElem.appendChild(imgContainer);
+
+		galleryFullElem.className = 'gallerizer-viewbox'+galleryWinOpenClass;
 
 	function gallerize () {
 		galleryItems = gallery.querySelectorAll(galleryItemSelector);
@@ -23,18 +27,33 @@ var createAGallerizer = function () {
 		var galleryIndex = 0,
 			child = item;
 		while((child = child.previousSibling) != null)
-			galleryIndex++
-
-		if(thisURL !== undefined) {
-			goToGalleryAt(thisURL);
-		} else {
-			alert(err['noURL'])
-		}
+			galleryIndex++;
+		openGalleryWin(function () {
+			goToGalleryAt(galleryIndex);
+		});
 	}
 
-	function goToGalleryAt (url) {
-		var thisURL = item.getElementsByTagName('a')[0].href;
+	function openGalleryWin (callback) {
+		var galleryWinInDoc = document.querySelector('.gallerizer-viewbox');
+		if(galleryWinInDoc !== null) {
+			if(galleryWinInDoc.className.indexOf(galleryWinOpenClass) > -1) {
+				galleryWinInDoc.className += galleryWinOpenClass;
+			}
+		} else {
+			document.body.appendChild(galleryFullElem);
+			var galleryWinInDoc = galleryFullElem;
+		}
+		callback();
+	}
+
+	function goToGalleryAt (elemIndex) {
+		var item = galleryItems[elemIndex],
+			thisURL = item.getElementsByTagName('a')[0].href;
 		if(thisURL !== undefined) {
+			galleryFullImgElem.src = 'thisURL';
+		} else {
+			alert(err['noURL']);
+		}
 	}
 
 	return {
