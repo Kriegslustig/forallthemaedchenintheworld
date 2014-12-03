@@ -8,20 +8,34 @@ window.onload = function () {
     }
   };
 }
+
 var createAGallerizer = function () {
   var gallery,
+
+    // The selector for individual gallery items relative to a gallery
     galleryItemSelector = '.gallery-item',
+
+    // The class that will be added the a gallerizer is open
     galleryWinOpenClass = ' gallerizer-viewbox--open',
+
+    // A HTMLNode Collection of all gallery items (defined in gallerize)
     galleryItems,
-    err = {
-      'noURL': 'No attachment link found, please check if you have set the gallery items to link to their media-files',
-    },
+
+    // Error messages schould be stored here
+    err,
+
+    // The gallerizer div, it will contian the imgs
     galleryFullElem = document.createElement('div'),
+
+    // The img elem inside the gallerizer elem
     galleryFullImgElem = document.createElement('img');
 
     galleryFullElem.appendChild(galleryFullImgElem);
-
     galleryFullElem.className = 'gallerizer-viewbox'+galleryWinOpenClass;
+
+  err = {
+    'noURL': 'No attachment link found, please check if you have set the gallery items to link to their media-files',
+  }
 
   function gallerize () {
     galleryItems = gallery.querySelectorAll(galleryItemSelector);
