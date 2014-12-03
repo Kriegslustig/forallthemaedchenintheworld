@@ -1,25 +1,37 @@
+window.onload = function () {
+	var galleries = [],
+		galleryElems = document.querySelectorAll('.gallery');
+	for (var key in galleryElems) {
+		if(galleryElems.hasOwnProperty(key)) {
+			galleries[key] = createAGallerizer();
+			galleries[key].init(galleryElems[key]);
+		}
+	};
+}
 var createAGallerizer = function () {
 	var gallery,
 		galleryItemSelector = '.gallery-item',
-		galleryWinOpenClass = ' .gallerizer-viewbox--open',
+		galleryWinOpenClass = ' gallerizer-viewbox--open',
 		galleryItems,
 		err = {
 			'noURL': 'No attachment link found, please check if you have set the gallery items to link to their media-files',
 		},
-		galleryFullElem = document.createNode('div'),
-		galleryFullImgElem = document.createNode('img');
+		galleryFullElem = document.createElement('div'),
+		galleryFullImgElem = document.createElement('img');
 
-		galleryFullElem.appendChild(imgContainer);
+		galleryFullElem.appendChild(galleryFullImgElem);
 
 		galleryFullElem.className = 'gallerizer-viewbox'+galleryWinOpenClass;
 
 	function gallerize () {
 		galleryItems = gallery.querySelectorAll(galleryItemSelector);
-		for(var i = 0; i > galleryItems.length; i++) {
-			galleryItems[i].addEventListener('click', function(e) {
-				e.preventDefault();
-				openGalleryItem(this);
-			});
+		for(var key in galleryItems) {
+			if(galleryItems.hasOwnProperty(key)) {
+				galleryItems[key].addEventListener('click', function(e) {
+					e.preventDefault();
+					openGalleryItem(this);
+				});
+			}
 		}
 	}
 
@@ -50,25 +62,16 @@ var createAGallerizer = function () {
 		var item = galleryItems[elemIndex],
 			thisURL = item.getElementsByTagName('a')[0].href;
 		if(thisURL !== undefined) {
-			galleryFullImgElem.src = 'thisURL';
+			galleryFullImgElem.src = thisURL;
 		} else {
 			alert(err['noURL']);
 		}
 	}
 
 	return {
-		init: function (gallery) {
-			gallery = gallery;
+		init: function (thisGallery) {
+			gallery = thisGallery;
 			gallerize();
 		}
 	}
-}
-
-document.onload = function () {
-	var galleries = [],
-		galleryElems = document.querySelectorAll('.gallery');
-	for (var i = 0; i > galleryElems.length; i++) {
-		galleries[i] = createAGallerizer();
-		galleries[i].init(galleryElems[i]);
-	};
 }
