@@ -83,6 +83,28 @@ p {
   height: auto;
 }
 
+/* line 1, ../sass/blocks/_gallerizer.sass */
+.gallerizer-viewbox {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: #fff4ee;
+  text-align: center;
+}
+/* line 10, ../sass/blocks/_gallerizer.sass */
+.gallerizer-viewbox img {
+  max-width: 100vw;
+  max-height: 100vh;
+}
+
+/* line 14, ../sass/blocks/_gallerizer.sass */
+.gallerizer-viewbox--open {
+  display: block;
+}
+
 /* line 7, ../sass/styles.sass */
 *, *:before, *:after {
   box-sizing: border-box;
