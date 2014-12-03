@@ -1,10 +1,11 @@
+var gallerizerz = {};
 window.onload = function () {
-  var galleries = [],
-    galleryElems = document.querySelectorAll('.gallery');
+  var galleryElems = document.querySelectorAll('.gallery');
+  console.log(galleryElems);
   for (var key in galleryElems) {
     if(galleryElems.hasOwnProperty(key)) {
-      galleries[key] = createAGallerizer();
-      galleries[key].init(galleryElems[key]);
+      gallerizerz[key] = createAGallerizer();
+      gallerizerz[key].init(galleryElems[key]);
     }
   };
 }
@@ -59,8 +60,9 @@ var createAGallerizer = function () {
   function openGalleryItem (item) {
     var galleryIndex = 0,
       child = item;
-    while((child = child.previousSibling) != null)
+    while((child = child.previousSibling) != null) {
       galleryIndex++;
+    }
     openGalleryWin(function () {
       goToGalleryAt(galleryIndex);
     });
