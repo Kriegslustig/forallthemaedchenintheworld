@@ -1,1 +1,45 @@
-=bp ($breakpoint)
+=bp ($params)
+  $conditions: ()
+  $first-param-type: type-of(nth($params, 1))
+  @if $first-param-type == string or $first-param-type == number
+    $condition-params: _bp_parse_condition_params($params)
+    $conditions: append($conditions, _bp_add_condition($condition-params...))
+  @else
+    @each $param in $params
+      @elseif type-of($param) == list
+        @each $cond in $param
+          $condition-params: _bp_parse_condition_params($cond)
+          $conditions: append($conditions, _bp_add_condition($condition-params...))
+
+  $mediaquery-string: "all"
+  @each $condition in $conditions
+    $mediaquery-string: "#{$mediaquery-string} AND #{$condition}"
+
+  @media #{$mediaquery-string}
+    @content
+
+// This function takes two arguments
+@function _bp_add_condition ($lt-gt, $px-val)
+  @return "(#{$lt-gt}: #{$px-val})"
+
+@function _bp_parse_condition_params ($params)
+  $measure: width
+  $lt-gt: min
+  $px-val: 0
+  @if length($params) == 3
+    $measure: nth($params, 3)
+    $lt-gt: "#{nth($params, 1)}-#{$measure}"
+    $px-val: nth($params, 2)
+  @else if length($params) == 2
+    @if type-of(nth($params, 1)) == number
+      $px-val: nth($params, 1)
+    @else
+      $lt-gt: "#{nth($params, 1)}-#{$measure}"
+      $px-val: nth($params, 2)
+  @else
+    $lt-gt: "#{$lt-gt}-#{$measure}"
+    $px-val: nth($params, 2)
+  @return ($lt-gt, $px-val)
+
+@function _bp_check_ifvar ($px-val)
+  @return $px-val
