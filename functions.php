@@ -1,7 +1,5 @@
 <?php
 
-include 'php/reloadr.php';
-
 /*
  * @action wp_enqueue_scripts
  * Enques my stylesheets
