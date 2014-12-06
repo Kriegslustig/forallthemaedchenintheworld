@@ -1,5 +1,7 @@
 <?php
 
+include 'php/reloadr.php';
+
 /*
  * @action wp_enqueue_scripts
  * Enques my stylesheets
@@ -20,6 +22,7 @@ add_action('wp_enqueue_scripts', 'bin_wp_enqueue_scripts');
 function bin_wp_enqueue_scripts () {
   wp_enqueue_script( 'prefixfree', get_bloginfo('template_directory').'/js/prefixfree.min.js', array(), false, true);
   wp_enqueue_script( 'gallerizer', get_bloginfo('template_directory').'/js/gallerizer.js', array(), false, true);
+  wp_enqueue_script( 'reloadr', get_bloginfo('template_directory').'/js/reloadr.js', array(), false, true);
 }
 
 /*
