@@ -104,13 +104,16 @@ var createAGallerizer = function () {
 
   function parseHashQuery () {
     if(location.href.indexOf('#') > -1) {
-      var hash = location.href.split('#')[1].split('glrzr=')[1];
-      var currGallery = hash.split('--')[0];
-      if(gallery.id === currGallery) {
-        var index = hash.split('--')[1];
-        openGalleryWin(function () {
-          goToGalleryAt(index);
-        });
+      var hash = location.href.split('#')[1]
+      if(hash.length > 0) {
+        hash = hash.split('glrzr=')[1];
+        var currGallery = hash.split('--')[0];
+        if(gallery.id === currGallery) {
+          var index = hash.split('--')[1];
+          openGalleryWin(function () {
+            goToGalleryAt(index);
+          });
+        }
       }
     }
   }
