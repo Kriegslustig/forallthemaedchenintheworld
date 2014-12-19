@@ -51,7 +51,16 @@ articleSwitcher = {
 };
 
 articleSwitcher.createArticle = (function (node) {
-  var _node = node;
+  var _node = node,
+  state = {
+    focus: false,
+    open: false
+  },
+  titlePosition,
+  size = {
+    height: _node.height,
+    width: _node.width
+  };
   return {
     open: function () {
       _node.className += ' ' + this.config.openClass;
