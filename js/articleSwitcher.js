@@ -11,6 +11,7 @@
  * - Put an animated line next to the article that is in focus
  *
  * ArticleSwitcher = {}
+ * - articleIndex = [Article, Article, ...]
  * - config = {}
  *   - article = {}
  *     - class
@@ -21,6 +22,8 @@
  *   - focus
  *     - class
  *     - animationTime
+ *   - container
+ *     - tolarance
  *
  * Article = {}
  * - _node = DOMNode
@@ -40,18 +43,23 @@
  * Should have
  * - flyingThingi = DOMNode
  * - _position = integer
- * - articleIndex = [Article, Article, ...]
  * - goto() uses scrollTo, sets position
  *
  * Controll
  *   When articleSwitcher is initialized Controll will create all Article's and create the index for Focus
  * Should have:
+ * - _container
  * - switchPos = integer the position in pixels where the focus should switch
- * - setScrollListener()
- *   - updateSwitchPos()
+ * - init()
+ *   - _createIndex
+ *   - _setScrollListener()
+ *     - _updateSwitchPos()
+ *
+ * getOffset(node)
  */
 
 articleSwitcher = {
+  articleIndex: [];
   config: {
     article: {
       class: 'article',
@@ -64,6 +72,10 @@ articleSwitcher = {
       class = 'focusLine',
       animationTime: 200,
     },
+    container: {
+      class: 'main',
+      tolarance: 20,
+    }
   }
 };
 
@@ -80,18 +92,6 @@ articleSwitcher.createArticle = (function (node) {
   _size = {
     height: _node.height,
     width: _node.width
-  };
-  function _getOffset () {
-    var pos = {
-      x: _node.offsetLeft,
-      y: _node.offsetTop
-    },
-    child = _node;
-    while(child = child.offsetParent) {
-      pos.x += child.offsetLeft;
-      pos.y += child.offsetTop;
-    }
-    return pos;
   };
   return {
     open: function () {
@@ -111,7 +111,7 @@ articleSwitcher.createArticle = (function (node) {
     },
 
     updatePos: function () {
-     _titlePosition = _getOffset();
+     _titlePosition = getOffset(_node);
     },
 
     getHeight: function () {
@@ -131,16 +131,60 @@ articleSwitcher.createFocus = (function () {
   _flyingThingi.className = this.config.focus.class;
   document.body.appendChild(flyingThingi);
   return {
-    articleIndex,
+    this.articleIndex,
     goto: function (index) {
       _flyingThingi.remove();
-      articleIndex[index].appendElement(_flyingThingi);
-      var moveBy = articleIndex[_position].getHeight() + this.config.article.offsetTop;
+      this.articleIndex[index].appendElement(_flyingThingi);
+      var moveBy = this.articleIndex[_position].getHeight() + this.config.article.offsetTop;
       _flyingThingi.css.transform = 'translateY: '+ moveBy + 'px';
       setTimeout(function () {
         _flyingThingi.remove();
-        articleIndex[index].appendElement(_flyingThingi);
+        this.articleIndex[index].appendElement(_flyingThingi);
       }, this.config.focus.animationTime);
     }
   }
 });
+
+articleSwitcher.createControll = (function () {
+  var _container = document.querySelector(this.config.container.class),
+  _switchPos = _container.height + getOffset(_container) - this.config.container.tolarance - innerHeight;
+  function _createIndex () {
+    var allArticleNodes = document.querySelectorAll(this.config.config.article.class);
+    for(var key in allArticleNodes) {
+      if(allArticleNodes.hasOwnProperty(key)) {
+        var thisNode = allArticleNodes[key];
+        this.articleIndex.push(createArticle(thisNode));
+      }
+    }
+  }
+
+  function _setScrollListener () {
+    window.addEventListener('scroll', function () {
+      if(window.pageYOffset >= _switchPos ){
+        ;
+      }
+    }, false);
+  }
+
+  function _updateSwitchPos () {
+    ;
+  }
+  return {
+    init: function () {
+      _setScrollListener ();
+    }
+  }
+});
+
+function getOffset (thisNode) {
+  var pos = {
+    x: thisNode.offsetLeft,
+    y: thisNode.offsetTop
+  },
+  child = thisNode;
+  while(child = child.offsetParent) {
+    pos.x += child.offsetLeft;
+    pos.y += child.offsetTop;
+  }
+  return pos;
+};
