@@ -10,14 +10,20 @@
  * - open the next article when the user scrolls to the bottom of the page or clicks it's title
  * - Put an animated line next to the article that is in focus
  *
+ * ArticleSwitcher = {}
+ * - config = {}
+ *   - article = {}
+ *     - openClass = {}
+ *     - focusClass
+ *
  * Article = {}
- * Should have:
+ * - _node = DOMNode
  * - state = {focus: bool, open: bool}
  * - titlePosition = (x: integer, y: integer)
  * - size = (height: integer, width: integer)
  * - close()
  * - open()
- * - focus() setts data-focus
+ * - focus()
  * - unFocus()
  *
  * Focus = {}
@@ -34,3 +40,33 @@
  * - setScrollListener()
  *   - updateSwitchPos()
  */
+
+articleSwitcher = {
+  config: {
+    article: {
+      openClass: 'article--open';
+      focusClass: 'article--focus';
+    }
+  }
+};
+
+articleSwitcher.createArticle = (function (node) {
+  var _node = node;
+  return {
+    open: function () {
+      _node.className += ' ' + this.config.openClass;
+    },
+
+    close: function () {
+      _node.className = _node.className.replace('' + this.config.openClass, '');
+    },
+
+    focus: function () {
+      _node.className += ' ' + this.config.focusClass;
+    },
+
+    unFocus: function () {
+      _node.className = _node.className.replace('' + this.config.focusClass, '');
+    },
+  }
+});
