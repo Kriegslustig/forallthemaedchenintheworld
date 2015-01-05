@@ -2,7 +2,7 @@ var gallerizerz = {};
 window.addEventListener('load', function () {
   var galleryElems = document.querySelectorAll('.gallery');
   for (var key in galleryElems) {
-    if(galleryElems.hasOwnProperty(key)) {
+    if(galleryElems.hasOwnProperty(key) && key != 'length') {
       gallerizerz[key] = createAGallerizer();
       gallerizerz[key].init(galleryElems[key]);
     }
@@ -167,7 +167,7 @@ var createAGallerizer = function () {
     },
 
     closeGallery: function () {
-
+      closeGallary();
     }
   }
 }
