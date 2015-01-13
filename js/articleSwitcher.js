@@ -232,8 +232,8 @@ articleSwitcher.createControl = (function () {
     var index = index || 0;
     articleSwitcher.articleIndex[index].updatePos();
     if(innerHeight >= articleSwitcher.articleIndex[index].getTitlePosition().y) {
+      articleSwitcher.articleIndex[index].open();
       setTimeout(function () {
-        articleSwitcher.articleIndex[index].open();
         _checkIfAnyShouldOpen(index + 1);
       }, articleSwitcher.config.focus.animationTime);
     }
