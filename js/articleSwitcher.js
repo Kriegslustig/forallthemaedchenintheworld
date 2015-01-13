@@ -202,7 +202,10 @@ articleSwitcher.createControl = (function () {
           current = current + 1;
           _updateSwitchPos();
           setTimeout(function () {
-            _blockCheck = false;
+            articleSwitcher.articleIndex[current].updatePos();
+            _animScrollTo(articleSwitcher.articleIndex[current].getTitlePosition().y, function () {
+              _blockCheck = false;
+            });
           }, (articleSwitcher.config.focus.animationTime * 2));
         });
       },articleSwitcher.config.focus.triggerTime);
@@ -218,7 +221,10 @@ articleSwitcher.createControl = (function () {
           _updateSwitchPos();
           articleSwitcher.articleIndex[current].updatePos();
           setTimeout(function () {
-            _blockCheck = false;
+            articleSwitcher.articleIndex[current].updatePos();
+            _animScrollTo(articleSwitcher.articleIndex[current].getTitlePosition().y, function () {
+              _blockCheck = false;
+            });
           }, (articleSwitcher.config.focus.animationTime * 2));
         });
       },articleSwitcher.config.focus.triggerTime);
@@ -237,6 +243,23 @@ articleSwitcher.createControl = (function () {
         _updateSwitchPos();
       }
     }, 1);
+  }
+
+  function _animScrollTo (position, callback) {
+    var currentState = pageYOffset,
+    dir = pageYOffset > position ? 'up' : 'down'
+    scrollInterval = setInterval( function () {
+      if(currentState !== pageYOffset) {
+        clearInterval(scrollInterval);
+      }
+      if((dir == 'down' && position < pageYOffset) || (dir == 'up' && position > pageYOffset)) {
+        clearInterval(scrollInterval);
+        callback();
+      } else {
+        scrollTo(0, pageYOffset > position ? pageYOffset - 60 : pageYOffset + 60);
+        currentState = pageYOffset;
+      }
+    }, 10);
   }
 
   function _checkIfAnyShouldOpen (index) {
