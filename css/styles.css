@@ -13,7 +13,7 @@ h2 {
 }
 
 /* line 11, ../sass/blocks/_article.sass */
-article strong {
+strong {
   font-size: 1.5rem;
   line-height: 2rem;
   font-weight: 800;
@@ -26,15 +26,22 @@ p {
 }
 
 /* line 20, ../sass/blocks/_article.sass */
-.article main {
+.article__main {
   height: 0;
   overflow: hidden;
-  transition: height 0.2s;
+  padding: 0;
+  padding: 2rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: 0.2s;
+  transition-property: height padding-top padding-bottom;
 }
 
-/* line 25, ../sass/blocks/_article.sass */
-.article--open main {
+/* line 30, ../sass/blocks/_article.sass */
+.article--open > .article__main {
   height: 40rem;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
 }
 
 /* line 1, ../sass/blocks/_article-img_size-full.sass */
@@ -149,7 +156,7 @@ body {
 }
 
 /* line 19, ../sass/styles.sass */
-main {
+.main-content {
   padding: 5%;
 }
 
