@@ -25,6 +25,18 @@ p {
   line-height: 2rem;
 }
 
+/* line 20, ../sass/blocks/_article.sass */
+.article main {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.2s;
+}
+
+/* line 25, ../sass/blocks/_article.sass */
+.article--open main {
+  height: 40rem;
+}
+
 /* line 1, ../sass/blocks/_article-img_size-full.sass */
 .image_wrapper--size--full {
   position: relative;

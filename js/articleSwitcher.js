@@ -10,7 +10,7 @@
  * - open the next article when the user scrolls to the bottom of the page or clicks it's title
  * - Put an animated line next to the article that is in focus
  *
- * ArticleSwitcher = {}
+ * articleSwitcher = {}
  * - articleIndex = [Article, Article, ...]
  * - config = {}
  *   - article = {}
@@ -28,8 +28,8 @@
  * Article = {}
  * - _node = DOMNode
  * - state = {focus: bool, open: bool}
- * - titlePosition = (x: integer, y: integer)
  * - size = (height: integer, width: integer)
+ * - getTitlePosition() returns (x: integer, y: integer)
  * - close()
  * - open()
  * - focus()
@@ -45,11 +45,12 @@
  * - _position = integer
  * - goto() uses scrollTo, sets position
  *
- * Controll
- *   When articleSwitcher is initialized Controll will create all Article's and create the index for Focus
+ * Control
+ *   When articleSwitcher is initialized Control will create all Articles and create the index for Focus
  * Should have:
  * - _container
  * - switchPos = integer the position in pixels where the focus should switch
+ * - current
  * - init()
  *   - _createIndex
  *   - _setScrollListener()
@@ -59,7 +60,7 @@
  */
 
 articleSwitcher = {
-  articleIndex: [];
+  articleIndex: [],
   config: {
     article: {
       class: 'article',
@@ -69,8 +70,9 @@ articleSwitcher = {
       titleClass: 'article__title',
     },
     focus: {
-      class = 'focusLine',
+      class: 'focusLine',
       animationTime: 200,
+      triggerTime: 1000,
     },
     container: {
       class: 'main',
@@ -85,95 +87,197 @@ articleSwitcher.createArticle = (function (node) {
     focus: false,
     open: false
   },
-  _titlePosition {
-    x,
-    y
-  },
+  _titlePosition = getOffset(_node);
   _size = {
     height: _node.height,
     width: _node.width
   };
+
   return {
     open: function () {
-      _node.className += ' ' + this.config.openClass;
+      if(!_state.open) {
+        _node.className += ' ' + articleSwitcher.config.article.openClass;
+        _state.open = true;
+      }
     },
 
     close: function () {
-      _node.className = _node.className.replace('' + this.config.openClass, '');
+      if(_state.open) {
+        _node.className = _node.className.replace(' ' + articleSwitcher.config.article.openClass, '');
+        _state.open = false;
+      }
     },
 
     focus: function () {
-      _node.className += ' ' + this.config.focusClass;
+      _node.className += ' ' + articleSwitcher.config.article.focusClass;
     },
 
     unFocus: function () {
-      _node.className = _node.className.replace('' + this.config.focusClass, '');
+      _node.className = _node.className.replace('' + articleSwitcher.config.article.focusClass, '');
+    },
+
+    getHeight: function () {
+      return _size.height;
+    },
+
+    appendElement: function (element) {
+      _node.appendChild(element);
+    },
+
+    getTitlePosition: function () {
+      return _titlePosition;
     },
 
     updatePos: function () {
      _titlePosition = getOffset(_node);
     },
-
-    getHeight: function () {
-      return _size.height;
-    }
-
-    appendElement: function (element) {
-      _node.appendChild(element);
-    }
   }
 });
 
 articleSwitcher.createFocus = (function () {
   var _position = 0,
-  _flyingThingi = document.createElement('div'),
+  _flyingThingi = document.createElement('div');
 
-  _flyingThingi.className = this.config.focus.class;
-  document.body.appendChild(flyingThingi);
+  _flyingThingi.className = articleSwitcher.config.focus.class;
+  document.body.appendChild(_flyingThingi);
   return {
-    this.articleIndex,
     goto: function (index) {
       _flyingThingi.remove();
-      this.articleIndex[index].appendElement(_flyingThingi);
-      var moveBy = this.articleIndex[_position].getHeight() + this.config.article.offsetTop;
-      _flyingThingi.css.transform = 'translateY: '+ moveBy + 'px';
+      articleSwitcher.articleIndex[index].appendElement(_flyingThingi);
+      var moveBy = articleSwitcher.articleIndex[_position].getHeight() + articleSwitcher.config.article.offsetTop;
+      _flyingThingi.style.transform = 'translateY: '+ moveBy + 'px';
       setTimeout(function () {
         _flyingThingi.remove();
-        this.articleIndex[index].appendElement(_flyingThingi);
-      }, this.config.focus.animationTime);
+        articleSwitcher.articleIndex[index].appendElement(_flyingThingi);
+      }, articleSwitcher.config.focus.animationTime);
     }
   }
 });
 
-articleSwitcher.createControll = (function () {
-  var _container = document.querySelector(this.config.container.class),
-  _switchPos = _container.height + getOffset(_container) - this.config.container.tolarance - innerHeight;
+articleSwitcher.createControl = (function () {
+  var _container = document.querySelector(articleSwitcher.config.container.class),
+  _switchPos = _container.height + getOffset(_container) - articleSwitcher.config.container.tolarance - innerHeight,
+  current = 0,
+  _blocked = true,
+  _blockCheck = false;
+
   function _createIndex () {
-    var allArticleNodes = document.querySelectorAll(this.config.config.article.class);
+    var allArticleNodes = document.querySelectorAll(articleSwitcher.config.config.article.class);
     for(var key in allArticleNodes) {
       if(allArticleNodes.hasOwnProperty(key)) {
         var thisNode = allArticleNodes[key];
-        this.articleIndex.push(createArticle(thisNode));
+        articleSwitcher.articleIndex.push(createArticle(thisNode));
       }
     }
   }
 
   function _setScrollListener () {
     window.addEventListener('scroll', function () {
-      if(window.pageYOffset >= _switchPos ){
-        ;
+      if(!_blockCheck && _blocked) {
+        _blocked = false;
       }
-    }, false);
+    });
+    setInterval(function () {
+      if(!_blocked) {
+        _shouldSwitch('next', function () {
+          setTimeout(function () {
+            _shouldSwitch('next', function () {
+              _blockCheck = true;
+              articleSwitcher.articleIndex[current + 1].open();
+              articleSwitcher.focus.goto(current + 1);
+              articleSwitcher.articleIndex[current].close();
+              current = current + 1;
+              _updateSwitchPos();
+              setTimeout(function () {
+                _blockCheck = false;
+              },articleSwitcher.config.focus.animationTime);
+            });
+          },articleSwitcher.config.focus.triggerTime);
+        });
+        _shouldSwitch('prev', function () {
+          setTimeout(function () {
+            _shouldSwitch('prev', function () {
+              _blockCheck = true;
+              articleSwitcher.articleIndex[current - 1].open();
+              articleSwitcher.focus.goto(current - 1);
+              articleSwitcher.articleIndex[current].close();
+              current = current - 1;
+              _updateSwitchPos();
+              setTimeout(function () {
+                _blockCheck = false;
+              },articleSwitcher.config.focus.animationTime);
+            });
+          },articleSwitcher.config.focus.triggerTime);
+        });
+      }
+    }, 210);
+  }
+
+  function _shouldSwitch (condition, callback) {
+    setTimeout(function () {
+      articleSwitcher.articleIndex[current].updatePos();
+      if(condition === 'prev' && current !== 0 && window.pageYOffset <= articleSwitcher.articleIndex[current].getTitlePosition().y) {
+        _blocked = true;
+        callback();
+      } else if (condition === 'next' && current !== articleSwitcher.articleIndex.length - 1 && window.pageYOffset >= _switchPos) {
+        _blocked = true;
+        callback();
+      } else {
+        return false;
+      }
+    }, 1);
+  }
+
+  function _checkIfAnyShouldOpen (index) {
+    var index = index || 0;
+    articleSwitcher.articleIndex[index].updatePos();
+    if(innerHeight >= articleSwitcher.articleIndex[index].getTitlePosition().y) {
+      setTimeout(function () {
+        articleSwitcher.articleIndex[index].open();
+        _checkIfAnyShouldOpen(index + 1);
+      }, articleSwitcher.config.focus.animationTime);
+    }
   }
 
   function _updateSwitchPos () {
-    ;
-  }
-  return {
-    init: function () {
-      _setScrollListener ();
+    if(articleSwitcher.articleIndex[current + 1]) {
+      setTimeout(function () {
+        articleSwitcher.articleIndex[current + 1].updatePos();
+        _switchPos = articleSwitcher.articleIndex[current + 1].getTitlePosition().y;
+      },1);
+    } else {
+      _switchPos = 0;
     }
   }
+
+  function _createIndex (callback) {
+    setTimeout( function () {
+      var allArticles = document.querySelectorAll('.' + articleSwitcher.config.article.class);
+      for(prop in allArticles) {
+        if(allArticles.hasOwnProperty(prop)) {
+          articleSwitcher.articleIndex.push(articleSwitcher.createArticle(allArticles[prop]));
+        }
+      }
+      callback();
+    }, 1);
+  }
+
+  return {
+    init: function () {
+      _createIndex(function () {
+        _setScrollListener ();
+        _updateSwitchPos();
+        _checkIfAnyShouldOpen();
+      });
+    }
+  }
+});
+
+// Initializing everything
+window.addEventListener('load', function () {
+  articleSwitcher.control = articleSwitcher.createControl();
+  articleSwitcher.focus = articleSwitcher.createFocus();
+  articleSwitcher.control.init();
 });
 
 function getOffset (thisNode) {
