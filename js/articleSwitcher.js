@@ -184,6 +184,7 @@ articleSwitcher.createControl = (function () {
     setInterval(function () {
       if(!_blocked) {
         _checkScrollPos();
+        console.log('check');
       }
     }, 200);
     window.addEventListener('resize', function () {
@@ -251,6 +252,7 @@ articleSwitcher.createControl = (function () {
     scrollInterval = setInterval( function () {
       if(currentState !== pageYOffset) {
         clearInterval(scrollInterval);
+        callback();
       }
       if((dir == 'down' && position < pageYOffset) || (dir == 'up' && position > pageYOffset)) {
         clearInterval(scrollInterval);
