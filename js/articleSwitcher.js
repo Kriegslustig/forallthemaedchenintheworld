@@ -76,7 +76,7 @@ articleSwitcher = {
     },
     container: {
       class: 'main',
-      tolarance: 20,
+      correction: 60,
     }
   }
 };
@@ -97,6 +97,7 @@ articleSwitcher.createArticle = (function (node) {
     open: function () {
       if(!_state.open) {
         _node.className += ' ' + articleSwitcher.config.article.openClass;
+        _node.style.height = (60 + _node.children[1].clientHeight) + 'px';
         _state.open = true;
       }
     },
@@ -104,6 +105,7 @@ articleSwitcher.createArticle = (function (node) {
     close: function () {
       if(_state.open) {
         _node.className = _node.className.replace(' ' + articleSwitcher.config.article.openClass, '');
+        _node.style.height = '60px'
         _state.open = false;
       }
     },
@@ -181,7 +183,6 @@ articleSwitcher.createControl = (function () {
     });
     setInterval(function () {
       if(!_blocked) {
-        console.log(_switchPos);
         _checkScrollPos();
       }
     }, 200);
@@ -215,6 +216,7 @@ articleSwitcher.createControl = (function () {
           articleSwitcher.articleIndex[current].close();
           current = current - 1;
           _updateSwitchPos();
+          articleSwitcher.articleIndex[current].updatePos();
           setTimeout(function () {
             _blockCheck = false;
           }, (articleSwitcher.config.focus.animationTime * 2));
@@ -225,11 +227,11 @@ articleSwitcher.createControl = (function () {
 
   function _shouldSwitch (condition, callback) {
     setTimeout(function () {
-      if(condition === 'prev' && current !== 0 && window.pageYOffset <= articleSwitcher.articleIndex[current].getTitlePosition().y) {
+      if(condition === 'prev' && current !== 0 && window.pageYOffset < articleSwitcher.articleIndex[current - 1].getTitlePosition().y) {
         _blocked = true;
         callback();
         _updateSwitchPos();
-      } else if (condition === 'next' && current !== articleSwitcher.articleIndex.length - 1 && window.pageYOffset >= _switchPos) {
+      } else if (condition === 'next' && current !== articleSwitcher.articleIndex.length - 1 && window.pageYOffset >= (_switchPos + articleSwitcher.config.container.correction)) {
         _blocked = true;
         callback();
         _updateSwitchPos();
