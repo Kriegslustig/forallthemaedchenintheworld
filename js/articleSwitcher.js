@@ -72,7 +72,7 @@ articleSwitcher = {
     focus: {
       class: 'focusLine',
       animationTime: 200,
-      triggerTime: 1000,
+      triggerTime: 500,
     },
     container: {
       class: 'main',
@@ -154,6 +154,7 @@ articleSwitcher.createFocus = (function () {
   }
 });
 
+// ToDo: handling resizing
 articleSwitcher.createControl = (function () {
   var _container = document.querySelector(articleSwitcher.config.container.class),
   _switchPos = _container.height + getOffset(_container) - articleSwitcher.config.container.tolarance - innerHeight,
@@ -179,38 +180,45 @@ articleSwitcher.createControl = (function () {
     });
     setInterval(function () {
       if(!_blocked) {
-        _shouldSwitch('next', function () {
-          setTimeout(function () {
-            _shouldSwitch('next', function () {
-              _blockCheck = true;
-              articleSwitcher.articleIndex[current + 1].open();
-              articleSwitcher.focus.goto(current + 1);
-              articleSwitcher.articleIndex[current].close();
-              current = current + 1;
-              _updateSwitchPos();
-              setTimeout(function () {
-                _blockCheck = false;
-              },articleSwitcher.config.focus.animationTime);
-            });
-          },articleSwitcher.config.focus.triggerTime);
-        });
-        _shouldSwitch('prev', function () {
-          setTimeout(function () {
-            _shouldSwitch('prev', function () {
-              _blockCheck = true;
-              articleSwitcher.articleIndex[current - 1].open();
-              articleSwitcher.focus.goto(current - 1);
-              articleSwitcher.articleIndex[current].close();
-              current = current - 1;
-              _updateSwitchPos();
-              setTimeout(function () {
-                _blockCheck = false;
-              },articleSwitcher.config.focus.animationTime);
-            });
-          },articleSwitcher.config.focus.triggerTime);
-        });
+        _checkScrollPos();
       }
-    }, 210);
+    }, 200);
+    window.addEventListener('resize', function () {
+      _updateSwitchPos();
+    });
+  }
+
+  function _checkScrollPos () {
+    _shouldSwitch('next', function () {
+      setTimeout(function () {
+        _shouldSwitch('next', function () {
+          _blockCheck = true;
+          articleSwitcher.articleIndex[current + 1].open();
+          articleSwitcher.focus.goto(current + 1);
+          articleSwitcher.articleIndex[current].close();
+          current = current + 1;
+          _updateSwitchPos();
+          setTimeout(function () {
+            _blockCheck = false;
+          }, (articleSwitcher.config.focus.animationTime * 2));
+        });
+      },articleSwitcher.config.focus.triggerTime);
+    });
+    _shouldSwitch('prev', function () {
+      setTimeout(function () {
+        _shouldSwitch('prev', function () {
+          _blockCheck = true;
+          articleSwitcher.articleIndex[current - 1].open();
+          articleSwitcher.focus.goto(current - 1);
+          articleSwitcher.articleIndex[current].close();
+          current = current - 1;
+          _updateSwitchPos();
+          setTimeout(function () {
+            _blockCheck = false;
+          }, (articleSwitcher.config.focus.animationTime * 2));
+        });
+      },articleSwitcher.config.focus.triggerTime);
+    });
   }
 
   function _shouldSwitch (condition, callback) {
@@ -219,7 +227,7 @@ articleSwitcher.createControl = (function () {
       if(condition === 'prev' && current !== 0 && window.pageYOffset <= articleSwitcher.articleIndex[current].getTitlePosition().y) {
         _blocked = true;
         callback();
-      } else if (condition === 'next' && current !== articleSwitcher.articleIndex.length - 1 && window.pageYOffset >= _switchPos) {
+      } else if (condition === 'next' && current !== articleSwitcher.articleIndex.length - 1 && window.pageYOffset >= (_switchPos - articleSwitcher.config.container.tolarance)) {
         _blocked = true;
         callback();
       } else {
