@@ -157,7 +157,7 @@ articleSwitcher.createFocus = (function () {
 // ToDo
 articleSwitcher.createControl = (function () {
   var _container = document.querySelector(articleSwitcher.config.container.class),
-  _switchPos = _container.height + getOffset(_container) - articleSwitcher.config.container.tolarance - innerHeight,
+  _switchPos = _container.clientHeight + getOffset(_container).y - articleSwitcher.config.container.tolarance - innerHeight,
   current = 0,
   _blocked = true,
   _blockCheck = false;
@@ -230,8 +230,6 @@ articleSwitcher.createControl = (function () {
       } else if (condition === 'next' && current !== articleSwitcher.articleIndex.length - 1 && window.pageYOffset >= (_switchPos - articleSwitcher.config.container.tolarance)) {
         _blocked = true;
         callback();
-      } else {
-        return false;
       }
     }, 1);
   }
