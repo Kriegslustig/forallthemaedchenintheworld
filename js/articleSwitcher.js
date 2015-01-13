@@ -181,7 +181,6 @@ articleSwitcher.createControl = (function () {
     });
     setInterval(function () {
       if(!_blocked) {
-        console.log(_switchPos);
         _checkScrollPos();
       }
     }, 200);
@@ -225,7 +224,6 @@ articleSwitcher.createControl = (function () {
 
   function _shouldSwitch (condition, callback) {
     setTimeout(function () {
-      articleSwitcher.articleIndex[current].updatePos();
       if(condition === 'prev' && current !== 0 && window.pageYOffset <= articleSwitcher.articleIndex[current].getTitlePosition().y) {
         _blocked = true;
         callback();
@@ -251,7 +249,7 @@ articleSwitcher.createControl = (function () {
     if(articleSwitcher.articleIndex[current + 1]) {
       setTimeout(function () {
         articleSwitcher.articleIndex[current + 1].updatePos();
-        _switchPos = articleSwitcher.articleIndex[current + 1].getTitlePosition().y;
+        _switchPos = articleSwitcher.articleIndex[current + 1].getTitlePosition().y - innerHeight;
       },1);
     } else {
       _switchPos = 0;
