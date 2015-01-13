@@ -154,7 +154,7 @@ articleSwitcher.createFocus = (function () {
   }
 });
 
-// ToDo: handling resizing
+// ToDo
 articleSwitcher.createControl = (function () {
   var _container = document.querySelector(articleSwitcher.config.container.class),
   _switchPos = _container.height + getOffset(_container) - articleSwitcher.config.container.tolarance - innerHeight,
@@ -282,10 +282,12 @@ articleSwitcher.createControl = (function () {
 });
 
 // Initializing everything
-window.addEventListener('load', function () {
-  articleSwitcher.control = articleSwitcher.createControl();
-  articleSwitcher.focus = articleSwitcher.createFocus();
-  articleSwitcher.control.init();
+document.addEventListener('readystatechange', function () {
+  if(document.readyState == 'interactive') {
+    articleSwitcher.control = articleSwitcher.createControl();
+    articleSwitcher.focus = articleSwitcher.createFocus();
+    articleSwitcher.control.init();
+  }
 });
 
 function getOffset (thisNode) {
