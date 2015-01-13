@@ -1,46 +1,82 @@
-/* line 1, ../sass/blocks/_article.sass */
+/* line 3, ../sass/blocks/_article.sass */
 h1 {
   color: #59aabe;
   font-size: 3rem;
   line-height: 4rem;
 }
 
-/* line 6, ../sass/blocks/_article.sass */
+/* line 8, ../sass/blocks/_article.sass */
 h2 {
   color: #59aabe;
   font-size: 2rem;
   line-height: 3rem;
 }
 
-/* line 11, ../sass/blocks/_article.sass */
+/* line 13, ../sass/blocks/_article.sass */
 strong {
   font-size: 1.5rem;
   line-height: 2rem;
   font-weight: 800;
 }
 
-/* line 16, ../sass/blocks/_article.sass */
+/* line 18, ../sass/blocks/_article.sass */
 p {
   font-size: 1rem;
   line-height: 2rem;
 }
 
-/* line 20, ../sass/blocks/_article.sass */
+/* line 22, ../sass/blocks/_article.sass */
 .article {
-  height: 3rem;
+  box-sizing: content-box;
+  position: relative;
   overflow: hidden;
-  margin: 2rem;
-  margin-top: 0;
-  margin-bottom: 0;
+  height: 3rem;
+  margin: 0;
+  padding: 0 2rem;
   transition: 0.2s;
+  padding-bottom: 0;
   transition-property: height margin-top margin-bottom;
 }
 
-/* line 29, ../sass/blocks/_article.sass */
+/* line 33, ../sass/blocks/_article.sass */
 .article--open {
   height: 40rem;
-  margin-top: 1rem;
   margin-bottom: 2rem;
+  padding-bottom: 5rem;
+}
+
+/* line 38, ../sass/blocks/_article.sass */
+.article__unsemantic_thing {
+  width: 100vw;
+  margin-left: -2rem;
+  border-bottom: 0.2rem solid #59aabe;
+  padding-bottom: 2rem;
+  position: relative;
+}
+
+/* line 45, ../sass/blocks/_article.sass */
+.article__unsemantic_thing:after {
+  content: "";
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  left: 60%;
+  bottom: -1.65rem;
+  margin-left: -1.5rem;
+  background-color: #fff4ee;
+  transform: rotate(45deg);
+  border-bottom: 0.2rem solid #59aabe;
+  border-right: 0.2rem solid #59aabe;
+}
+
+/* line 58, ../sass/blocks/_article.sass */
+.article__main {
+  display: none;
+}
+
+/* line 61, ../sass/blocks/_article.sass */
+.article--open .article__main {
+  display: block;
 }
 
 /* line 1, ../sass/blocks/_article-img_size-full.sass */

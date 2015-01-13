@@ -8,6 +8,7 @@
         <main class="article__main">
           <?php the_content(); ?>
         </main>
+        <div class="article__unsemantic_thing"></div>
       </article>
 <?php
     endwhile;
