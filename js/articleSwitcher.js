@@ -157,8 +157,8 @@ articleSwitcher.createFocus = (function () {
 // ToDo
 articleSwitcher.createControl = (function () {
   var _container = document.querySelector(articleSwitcher.config.container.class),
-  _switchPos = _container.clientHeight + getOffset(_container).y - articleSwitcher.config.container.tolarance - innerHeight,
   current = 0,
+  _switchPos = 0,
   _blocked = true,
   _blockCheck = false;
 
@@ -170,6 +170,7 @@ articleSwitcher.createControl = (function () {
         articleSwitcher.articleIndex.push(createArticle(thisNode));
       }
     }
+    _updateSwitchPos();
   }
 
   function _setScrollListener () {
@@ -180,6 +181,7 @@ articleSwitcher.createControl = (function () {
     });
     setInterval(function () {
       if(!_blocked) {
+        console.log(_switchPos);
         _checkScrollPos();
       }
     }, 200);
@@ -227,7 +229,7 @@ articleSwitcher.createControl = (function () {
       if(condition === 'prev' && current !== 0 && window.pageYOffset <= articleSwitcher.articleIndex[current].getTitlePosition().y) {
         _blocked = true;
         callback();
-      } else if (condition === 'next' && current !== articleSwitcher.articleIndex.length - 1 && window.pageYOffset >= (_switchPos - articleSwitcher.config.container.tolarance)) {
+      } else if (condition === 'next' && current !== articleSwitcher.articleIndex.length - 1 && window.pageYOffset >= _switchPos) {
         _blocked = true;
         callback();
       }
