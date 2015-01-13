@@ -181,6 +181,7 @@ articleSwitcher.createControl = (function () {
     });
     setInterval(function () {
       if(!_blocked) {
+        console.log(_switchPos);
         _checkScrollPos();
       }
     }, 200);
@@ -227,9 +228,11 @@ articleSwitcher.createControl = (function () {
       if(condition === 'prev' && current !== 0 && window.pageYOffset <= articleSwitcher.articleIndex[current].getTitlePosition().y) {
         _blocked = true;
         callback();
+        _updateSwitchPos();
       } else if (condition === 'next' && current !== articleSwitcher.articleIndex.length - 1 && window.pageYOffset >= _switchPos) {
         _blocked = true;
         callback();
+        _updateSwitchPos();
       }
     }, 1);
   }
