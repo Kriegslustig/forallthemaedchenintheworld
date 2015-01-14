@@ -184,7 +184,6 @@ articleSwitcher.createControl = (function () {
     setInterval(function () {
       if(!_blocked) {
         _checkScrollPos();
-        console.log('check');
       }
     }, 200);
     window.addEventListener('resize', function () {
@@ -205,9 +204,11 @@ articleSwitcher.createControl = (function () {
           setTimeout(function () {
             articleSwitcher.articleIndex[current].updatePos();
             _animScrollTo(articleSwitcher.articleIndex[current].getTitlePosition().y, function () {
-              _blockCheck = false;
+                _blockCheck = false;
             });
-          }, (articleSwitcher.config.focus.animationTime * 2));
+            setTimeout(function () {
+            }, 1000);
+          }, (articleSwitcher.config.focus.animationTime));
         });
       },articleSwitcher.config.focus.triggerTime);
     });
@@ -224,9 +225,11 @@ articleSwitcher.createControl = (function () {
           setTimeout(function () {
             articleSwitcher.articleIndex[current].updatePos();
             _animScrollTo(articleSwitcher.articleIndex[current].getTitlePosition().y, function () {
-              _blockCheck = false;
+                _blockCheck = false;
             });
-          }, (articleSwitcher.config.focus.animationTime * 2));
+            setTimeout(function () {
+            }, 1000);
+          }, (articleSwitcher.config.focus.animationTime));
         });
       },articleSwitcher.config.focus.triggerTime);
     });
@@ -248,17 +251,20 @@ articleSwitcher.createControl = (function () {
 
   function _animScrollTo (position, callback) {
     var currentState = pageYOffset,
-    dir = pageYOffset > position ? 'up' : 'down'
+    dir = pageYOffset > position ? 'up' : 'down',
+    step = pageYOffset > position ? (pageYOffset - position) / 20 : (position - pageYOffset) / 20,
     scrollInterval = setInterval( function () {
       if(currentState !== pageYOffset) {
         clearInterval(scrollInterval);
         callback();
+        return false;
       }
       if((dir == 'down' && position < pageYOffset) || (dir == 'up' && position > pageYOffset)) {
         clearInterval(scrollInterval);
         callback();
+        return false;
       } else {
-        scrollTo(0, pageYOffset > position ? pageYOffset - 60 : pageYOffset + 60);
+        scrollTo(0, pageYOffset > position ? pageYOffset - step : pageYOffset + step);
         currentState = pageYOffset;
       }
     }, 10);
